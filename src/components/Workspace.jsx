@@ -1,6 +1,6 @@
 import { useContext, useMemo } from "react";
 import Column from "./Column";
-import { DataContext } from "../dataConetext";
+import { DataContext } from "../DataContext";
 import { produce } from "immer";
 import {
   DndContext,

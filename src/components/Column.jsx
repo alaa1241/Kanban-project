@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import Card from "./Card";
-import { DataContext } from "../dataConetext";
+import { DataContext } from "../DataContext";
 import { produce } from "immer";
 
 const Column = ({ id, title, tasks = [], columnIndex }) => {

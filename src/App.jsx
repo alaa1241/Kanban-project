@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import Header from "./components/Header";
 import SideMenu from "./components/SideMenu";
 import Workspace from "./components/Workspace";
-import { DataContext } from "./dataConetext";
+import { DataContext } from "./DataContext";
 
 function App() {
   const [dataState, setDataState] = useState();

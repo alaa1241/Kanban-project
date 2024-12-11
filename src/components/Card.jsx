@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { DataContext } from "../dataConetext";
+import { DataContext } from "../DataContext";
 import { produce } from "immer";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";

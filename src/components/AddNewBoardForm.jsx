@@ -2,7 +2,7 @@ import TextField from "./TextField";
 import iconCross from "../assets/icon-cross.svg";
 import Button from "./Button";
 import { useContext, useState } from "react";
-import { DataContext } from "../dataConetext";
+import { DataContext } from "../DataContext";
 
 const AddNewBoardForm = ({
   toggleDialog,

@@ -2,7 +2,7 @@ import DropdownPrimitive from "./DropdownPrimitive";
 import iconVerticalEllipsis from "../assets/icon-vertical-ellipsis.svg";
 import DialogPrimitive from "./DialogPrimitive";
 import { useContext, useState } from "react";
-import { DataContext } from "../dataConetext";
+import { DataContext } from "../DataContext";
 import AddNewBoardForm from "./AddNewBoardForm";
 
 const Header = () => {
