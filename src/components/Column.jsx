@@ -4,17 +4,15 @@ import { DataContext } from "../DataContext";
 import { produce } from "immer";
 
 const Column = ({ id, title, tasks = [], columnIndex }) => {
-  const { selectedBoardIndex, setData, data } = useContext(DataContext);
+  const { selectedBoardIndex, data, setData } = useContext(DataContext);
 
   const createNewTask = () => ({
     id: Date.now(),
     title: "New Task",
   });
 
-  const addNewTaskHandler = () => {
-    const newTask = createNewTask();
-
-    const updatedColumns = data[selectedBoardIndex].columns.map((column) => {
+  const createNewColumnArray = (dataArray, boardIndex, newTask) => {
+    return dataArray[boardIndex].columns.map((column) => {
       if (column.id === id) {
         return {
           ...column,
@@ -23,16 +21,22 @@ const Column = ({ id, title, tasks = [], columnIndex }) => {
       }
       return column;
     });
+  };
+
+  const addNewTaskHandler = () => {
+    const newTask = createNewTask();
+
+    const newColumns = createNewColumnArray(data, selectedBoardIndex, newTask);
 
     setData((prev) =>
       produce(prev, (draft) => {
-        draft[selectedBoardIndex].columns = updatedColumns;
+        draft[selectedBoardIndex].columns = newColumns;
       })
     );
   };
 
   const onDeleteHandler = () => {
-    if (window.confirm(`Are you sure you want to delete this column?`)) {
+    if (window.confirm(`Are you sure you want to delete this "${title}"?`)) {
       setData((prev) =>
         produce(prev, (draft) => {
           draft[selectedBoardIndex].columns = draft[
@@ -44,11 +48,7 @@ const Column = ({ id, title, tasks = [], columnIndex }) => {
   };
 
   return (
-    <div
-      onDragOver={(e) => e.preventDefault()} // Allow drop
-      onDrop={(e) => e.preventDefault()} // Handle drop
-      className="flex w-72 shrink-0 flex-col self-start rounded-lg bg-lines-light px-2 shadow"
-    >
+    <div className="flex w-72 shrink-0 flex-col self-start rounded-lg bg-lines-light px-2 shadow">
       <h2 className="group/column relative top-0 rounded bg-lines-light px-2 py-4 text-heading-s">
         {title} ({tasks.length})
         <button
@@ -58,25 +58,25 @@ const Column = ({ id, title, tasks = [], columnIndex }) => {
           Delete
         </button>
       </h2>
-      <div className="flex flex-col gap-5 mb-5">
+      <div className="mb-5 flex flex-col gap-5">
         {tasks.map((task, index) => (
           <Card
             key={task.id}
             title={task.title}
             cardId={task.id}
             columnId={id}
+            cardIndex={index}
             columnIndex={columnIndex}
           />
         ))}
       </div>
       <button
-        onClick={addNewTaskHandler}
         className="-mx-2 mt-auto border-t border-light-grey bg-lines-light px-2 py-4 text-heading-m text-medium-grey"
+        onClick={addNewTaskHandler}
       >
         + Add New Task
       </button>
     </div>
   );
 };
-
 export default Column;

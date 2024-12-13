@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { DataContext } from "../DataContext";
 import { produce } from "immer";
 import { useSortable } from "@dnd-kit/sortable";
@@ -6,6 +6,7 @@ import { CSS } from "@dnd-kit/utilities";
 
 const Card = ({ title, columnId, cardId, cardIndex, columnIndex }) => {
   const { setData, selectedBoardIndex } = useContext(DataContext);
+  const [isEditMode, setIsEditMode] = useState(false);
   const { attributes, listeners, setNodeRef, transform, transition } =
     useSortable({
       id: cardId,
@@ -23,6 +24,29 @@ const Card = ({ title, columnId, cardId, cardIndex, columnIndex }) => {
       );
   };
 
+  const toggleEditMode = () => {
+    setIsEditMode(true);
+  };
+
+  const onFocusHandler = (e) => {
+    e.target.select();
+  };
+
+  const onBlurHandler = (e) => {
+    setIsEditMode(false);
+    if (e.target.value.trim() === title) return;
+    setData((prev) =>
+      produce(prev, (draft) => {
+        draft[selectedBoardIndex].columns[columnIndex].tasks[cardIndex].title =
+          e.target.value.trim();
+      })
+    );
+  };
+
+  const onKeyDownHandler = (e) => {
+    e.key === "Enter" && e.target.blur();
+  };
+
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
@@ -36,7 +60,23 @@ const Card = ({ title, columnId, cardId, cardIndex, columnIndex }) => {
       {...attributes}
       {...listeners}
     >
-      <button className="peer h-full text-start text-heading-m">{title}</button>
+      {isEditMode ? (
+        <textarea
+          className="h-full resize-none text-heading-m outline-light-grey"
+          defaultValue={title}
+          onFocus={onFocusHandler}
+          onBlur={onBlurHandler}
+          onKeyDown={onKeyDownHandler}
+          autoFocus
+        ></textarea>
+      ) : (
+        <button
+          className="peer h-full text-start text-heading-m"
+          onClick={toggleEditMode}
+        >
+          {title}
+        </button>
+      )}
       <button
         className="absolute bottom-0 right-0 top-0 bg-white p-2 text-body-m text-red opacity-0 shadow duration-300 focus:opacity-100 group-hover/card:opacity-100 peer-focus:opacity-100"
         onClick={onDeleteHandler}
